@@ -1,10 +1,10 @@
-package com.trade_republic.qoutation;
+package com.trade_republic.quotation;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class InstrumentQoutationApplicationTests {
+class InstrumentQuotationApplicationTests {
 
     @Test
     void contextLoads() {

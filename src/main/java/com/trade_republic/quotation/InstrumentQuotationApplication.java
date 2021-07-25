@@ -1,13 +1,13 @@
-package com.trade_republic.qoutation;
+package com.trade_republic.quotation;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class InstrumentQoutationApplication {
+public class InstrumentQuotationApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(InstrumentQoutationApplication.class, args);
+        SpringApplication.run(InstrumentQuotationApplication.class, args);
     }
 
 }
