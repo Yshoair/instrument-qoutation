@@ -2,7 +2,7 @@ package com.trade_republic.quotation.service;
 
 import com.trade_republic.quotation.data.contract.QuoteData;
 import com.trade_republic.quotation.data.entity.QuoteEntity;
-import com.trade_republic.quotation.repository.contract.IQuoteRepository;
+import com.trade_republic.quotation.repository.contract.QuoteRepository;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class QuoteService {
 
-    @Autowired private IQuoteRepository quoteRepository;
+    @Autowired private QuoteRepository quoteRepository;
     private final Logger logger = LogManager.getLogger(QuoteService.class);
 
     public void addQuote(QuoteData quoteData) {

@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 @Repository
-public interface IQuoteRepository extends JpaRepository<QuoteEntity, Integer> {
+public interface QuoteRepository extends JpaRepository<QuoteEntity, Integer> {
 
     @Transactional @Modifying
     @Query(value = "DELETE FROM QuoteEntity q where q.instrument.isin = :isin")

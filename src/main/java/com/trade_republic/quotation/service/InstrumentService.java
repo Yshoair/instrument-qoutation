@@ -2,18 +2,25 @@ package com.trade_republic.quotation.service;
 
 import com.trade_republic.quotation.data.contract.InstrumentData;
 import com.trade_republic.quotation.data.entity.InstrumentEntity;
-import com.trade_republic.quotation.repository.contract.IInstrumentRepository;
+import com.trade_republic.quotation.data.entity.InstrumentLatestQuoteVirtualEntity;
+import com.trade_republic.quotation.data.model.instrument.InstrumentPresentationModel;
+import com.trade_republic.quotation.repository.contract.InstrumentLatestQuoteRepository;
+import com.trade_republic.quotation.repository.contract.InstrumentRepository;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 
 @Service
 public class InstrumentService {
 
-    @Autowired private IInstrumentRepository instrumentRepository;
+    @Autowired private InstrumentRepository instrumentRepository;
+    @Autowired private InstrumentLatestQuoteRepository instrumentLatestQuoteRepository;
     @Autowired private QuoteService quoteService;
     private final Logger logger = LogManager.getLogger(InstrumentService.class);
 
@@ -38,6 +45,13 @@ public class InstrumentService {
             logger.error("Failed to delete instrument with isin " + instrumentData.getIsin() + " due to: " +
                     e.getMessage());
         }
+    }
 
+    public List<InstrumentPresentationModel> getLatestInstrumentsQuote() {
+        List<InstrumentLatestQuoteVirtualEntity> instruments = instrumentLatestQuoteRepository.findAll();
+        return instruments
+                .stream()
+                .map(instrumentEntity -> new InstrumentPresentationModel().mapFrom(instrumentEntity))
+                .collect(Collectors.toList());
     }
 }

@@ -6,7 +6,7 @@ import lombok.Data;
 import java.math.BigDecimal;
 
 @Data
-public class Quote implements QuoteData {
+public class QuoteStreamModel implements QuoteData {
     private BigDecimal price;
     private String isin;
 

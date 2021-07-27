@@ -13,7 +13,7 @@ public class WebSocketServiceFactory {
     @Autowired private InstrumentService instrumentService;
     @Autowired private QuoteService quoteService;
 
-    public synchronized void processStompMessage(StompMessage stompMessage) {
+    public synchronized void processStompMessage(StompMessage<?> stompMessage) {
         final String messageType = stompMessage.getType();
         final StompMessageTypes type = StompMessageTypes.fromValue(messageType);
         if (type != null)

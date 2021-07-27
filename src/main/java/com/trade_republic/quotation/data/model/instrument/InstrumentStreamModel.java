@@ -4,12 +4,14 @@ import com.trade_republic.quotation.data.contract.InstrumentData;
 import lombok.Data;
 
 @Data
-public class Instrument implements InstrumentData {
+public class InstrumentStreamModel implements InstrumentData {
     private String isin;
     private String description;
 
     @Override
     public InstrumentData map(InstrumentData instrumentData) {
-        return null;
+        isin = instrumentData.getIsin();
+        description = instrumentData.getDescription();
+        return this;
     }
 }
