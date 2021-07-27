@@ -2,8 +2,11 @@ package com.trade_republic.quotation.infrastructure.websocket.client.handler;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.trade_republic.quotation.data.model.instrument.InstrumentStompMessage;
+import com.trade_republic.quotation.service.InstrumentService;
+import com.trade_republic.quotation.service.WebSocketServiceFactory;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.WebSocketHandler;
@@ -13,6 +16,7 @@ import org.springframework.web.socket.WebSocketSession;
 @Component("instrumentHandler")
 public class InstrumentWebSocketHandler implements WebSocketHandler {
 
+    @Autowired private WebSocketServiceFactory webSocketServiceFactory;
     private final Logger logger = LogManager.getLogger(InstrumentWebSocketHandler.class);
 
     @Override
@@ -27,6 +31,7 @@ public class InstrumentWebSocketHandler implements WebSocketHandler {
                 InstrumentStompMessage.class
         );
         logger.info("Instrument Message received successfully: " + msg);
+        webSocketServiceFactory.processStompMessage(msg);
     }
 
     @Override
@@ -35,8 +40,7 @@ public class InstrumentWebSocketHandler implements WebSocketHandler {
     }
 
     @Override
-    public void afterConnectionClosed(WebSocketSession webSocketSession, CloseStatus closeStatus) {
-    }
+    public void afterConnectionClosed(WebSocketSession webSocketSession, CloseStatus closeStatus) { }
 
     @Override
     public boolean supportsPartialMessages() {
