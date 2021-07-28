@@ -17,12 +17,10 @@ public abstract class WebSocketClientConfig {
     }
 
     public WebSocketConnectionManager webSocketConnectionManagerFactory() {
-        //Generates a web socket connection
         WebSocketConnectionManager manager = new WebSocketConnectionManager(
                 new StandardWebSocketClient(),
                 handler,
                 uriTemplate);
-        //Will connect as soon as possible
         manager.setAutoStartup(true);
         return manager;
     }

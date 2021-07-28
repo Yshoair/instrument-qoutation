@@ -2,8 +2,7 @@ package com.trade_republic.quotation.infrastructure.websocket.client.handler;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.trade_republic.quotation.data.model.instrument.InstrumentStompMessage;
-import com.trade_republic.quotation.service.InstrumentService;
-import com.trade_republic.quotation.service.WebSocketServiceFactory;
+import com.trade_republic.quotation.service.WebSocketMessageProcessorFactory;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +15,7 @@ import org.springframework.web.socket.WebSocketSession;
 @Component("instrumentHandler")
 public class InstrumentWebSocketHandler implements WebSocketHandler {
 
-    @Autowired private WebSocketServiceFactory webSocketServiceFactory;
+    @Autowired private WebSocketMessageProcessorFactory webSocketMessageProcessorFactory;
     private final Logger logger = LogManager.getLogger(InstrumentWebSocketHandler.class);
 
     @Override
@@ -25,13 +24,12 @@ public class InstrumentWebSocketHandler implements WebSocketHandler {
     }
 
     @Override
-    public void handleMessage(WebSocketSession webSocketSession, WebSocketMessage<?> webSocketMessage) throws Exception {
-        InstrumentStompMessage msg = new ObjectMapper().readValue(
-                (String) webSocketMessage.getPayload(),
-                InstrumentStompMessage.class
-        );
+    public void handleMessage(WebSocketSession webSocketSession,
+                              WebSocketMessage<?> webSocketMessage) throws Exception {
+        InstrumentStompMessage msg = new ObjectMapper()
+                .readValue((String) webSocketMessage.getPayload(), InstrumentStompMessage.class);
         logger.info("Instrument Message received successfully: " + msg);
-        webSocketServiceFactory.processStompMessage(msg);
+        webSocketMessageProcessorFactory.processStompMessage(msg);
     }
 
     @Override
@@ -40,7 +38,9 @@ public class InstrumentWebSocketHandler implements WebSocketHandler {
     }
 
     @Override
-    public void afterConnectionClosed(WebSocketSession webSocketSession, CloseStatus closeStatus) { }
+    public void afterConnectionClosed(WebSocketSession webSocketSession, CloseStatus closeStatus) {
+        logger.info("Session closed : " + webSocketSession.getId());
+    }
 
     @Override
     public boolean supportsPartialMessages() {

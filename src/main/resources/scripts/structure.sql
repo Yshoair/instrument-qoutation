@@ -24,3 +24,30 @@ from instrument_quotation.quotes q
                      group by instrument_isin) lq
                     on lq.instrument_isin = q.instrument_isin and lq.priced_on = q.priced_on
          right join instrument_quotation.instruments i on i.isin = q.instrument_isin;
+
+create or replace view instrument_quotation.instrument_candlesticks
+            (isin, open_timestamp, open_price, high_price, low_price, close_price, close_timestamp) as
+select gq.instrument_isin,
+       gq.open_timestamp,
+       opq.price open_price,
+       gq.high_price,
+       gq.low_price,
+       cpq.price close_price,
+       gq.close_timestamp
+from (
+         select date_trunc('minute', priced_on)                    open_timestamp,
+                min(priced_on)                                     open_price_date,
+                max(price)                                         high_price,
+                min(price)                                         low_price,
+                max(priced_on)                                     close_price_date,
+                date_trunc('minute', priced_on) + Interval '1 min' close_timestamp,
+                count(1),
+                instrument_isin
+         from instrument_quotation.quotes
+         group by 1, instrument_isin
+     ) gq
+         inner join instrument_quotation.quotes opq
+                    on gq.instrument_isin = opq.instrument_isin and gq.open_price_date = opq.priced_on
+         inner join instrument_quotation.quotes cpq
+                    on gq.instrument_isin = cpq.instrument_isin and gq.close_price_date = cpq.priced_on
+order by 1, 2;

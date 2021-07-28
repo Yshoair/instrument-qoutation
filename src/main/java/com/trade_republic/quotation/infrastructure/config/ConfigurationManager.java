@@ -19,4 +19,10 @@ public class ConfigurationManager {
   @Value("${trade-republic.partner.websocket.stream.quote}")
   private String quoteStream;
 
+  @Value("${trade-republic.date-time.format}")
+  private String dateTimeFormat;
+
+  @Value("${trade-republic.instrument.candlestick.interval}")
+  private int candlestickInterval;
+
 }

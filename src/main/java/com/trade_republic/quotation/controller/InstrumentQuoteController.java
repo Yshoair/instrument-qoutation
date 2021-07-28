@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.List;
@@ -21,8 +22,8 @@ public class InstrumentQuoteController {
         return ResponseEntity.ok(instrumentService.getLatestInstrumentsQuote());
     }
 
-    @GetMapping("quotes")
-    public ResponseEntity<?> getHistoricalInstrumentsQuotes() {
-        return null;
+    @GetMapping("{isin}/quotes")
+    public ResponseEntity<?> getHistoricalInstrumentsQuotes(@PathVariable(name = "isin") String isin) {
+        return ResponseEntity.ok(instrumentService.getHistoricalInstrumentsQuotes(isin));
     }
 }
