@@ -11,6 +11,8 @@ import com.trade_republic.quotation.infrastructure.util.DateTimeUtils;
 import com.trade_republic.quotation.repository.contract.InstrumentCandlesticksRepository;
 import com.trade_republic.quotation.repository.contract.InstrumentLatestQuoteRepository;
 import com.trade_republic.quotation.repository.contract.InstrumentRepository;
+import com.trade_republic.quotation.service.contract.InstrumentServiceTemplate;
+import com.trade_republic.quotation.service.contract.QuoteServiceTemplate;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,16 +26,17 @@ import java.util.stream.Collectors;
 
 
 @Service
-public class InstrumentService {
+public class InstrumentService implements InstrumentServiceTemplate {
 
     @Autowired private InstrumentRepository instrumentRepository;
     @Autowired private InstrumentLatestQuoteRepository instrumentLatestQuoteRepository;
     @Autowired private InstrumentCandlesticksRepository instrumentCandlesticksRepository;
-    @Autowired private QuoteService quoteService;
+    @Autowired private QuoteServiceTemplate quoteService;
     @Autowired private ConfigurationManager configManager;
     @Autowired private DateTimeUtils dateTimeUtils;
     private final Logger logger = LogManager.getLogger(InstrumentService.class);
 
+    @Override
     public void addInstrument(InstrumentData instrumentData) {
         try {
             InstrumentData instrumentEntity = new InstrumentEntity().map(instrumentData);
@@ -45,6 +48,7 @@ public class InstrumentService {
         }
     }
 
+    @Override
     @Transactional
     public void deleteInstrument(InstrumentData instrumentData) {
         try {
@@ -57,6 +61,13 @@ public class InstrumentService {
         }
     }
 
+    /**
+     * Retrieve latest instrument quotes from a view repository
+     * Maps the view virtual entity to presentation model
+     *
+     * @return list of presentation model of the available instruments with latest prices
+     */
+    @Override
     public List<InstrumentPresentationModel> getLatestInstrumentsQuote() {
         List<InstrumentLatestQuoteVirtualEntity> instruments = instrumentLatestQuoteRepository.findAll();
         return instruments
@@ -65,6 +76,16 @@ public class InstrumentService {
                 .collect(Collectors.toList());
     }
 
+    /**
+     * Retrieve candlestick data for a certain instrument for the last n minutes from a view repository
+     * If no data exist for this instrument in the last n minutes return the last available candlestick data
+     * Maps the view entity to presentation model
+     * The last n minute is a system configuration in the .properties file and its value = 30
+     *
+     * @param isin for a certain instrument
+     * @return list Presentation model of candlestick data for a certain instruments for the last n minutes
+     */
+    @Override
     public List<CandlestickPresentationModel> getHistoricalInstrumentsQuotes(String isin) {
         Date fromDateTime = dateTimeUtils.subtractFromDate(new Date(), configManager.getCandlestickInterval());
         List<CandlestickVirtualEntity> candlestickEntities =

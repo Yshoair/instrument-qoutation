@@ -12,9 +12,12 @@
     <artifactId>instrument-quotation</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>instrument-quotation</name>
-    <description>Demo project for Spring Boot</description>
+    <description>project which consumes websocket stream for instruments and quotes and generates statistics
+        accordingly
+    </description>
     <properties>
         <java.version>11</java.version>
+        <dependencies.dir>${project.basedir}/src/main/resources/dependency</dependencies.dir>
     </properties>
     <dependencies>
         <dependency>
@@ -75,6 +78,34 @@
                         </exclude>
                     </excludes>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>com.dkanejs.maven.plugins</groupId>
+                <artifactId>docker-compose-maven-plugin</artifactId>
+                <version>4.0.0</version>
+                <executions>
+                    <execution>
+                        <id>up</id>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>up</goal>
+                        </goals>
+                        <configuration>
+                            <composeFile>${dependencies.dir}/docker-compose/docker-compose.yml</composeFile>
+                            <detachedMode>true</detachedMode>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>down</id>
+                        <phase>clean</phase>
+                        <goals>
+                            <goal>down</goal>
+                        </goals>
+                        <configuration>
+                            <composeFile>${dependencies.dir}/docker-compose/docker-compose.yml</composeFile>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>

@@ -5,6 +5,13 @@ import org.springframework.web.socket.WebSocketHandler;
 import org.springframework.web.socket.client.WebSocketConnectionManager;
 import org.springframework.web.socket.client.standard.StandardWebSocketClient;
 
+/**
+ * Websocket Abstract client configuration class
+ *
+ * Extended by websocket clients
+ * Each client provides appropriate uri and handler for the stream
+ *
+ */
 @Configuration
 public abstract class WebSocketClientConfig {
 
